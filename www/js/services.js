@@ -22,8 +22,7 @@ angular.module('chat.services', [])
 				registration_date: Date()
 			};
 
-			var messagesRef = $firebaseArray(firebase.database().ref().child("users"));
-			messagesRef.$add(profile);
+			ref.child("users").child(uid).set(profile);
 			$log.log("User Saved");
 		},
 
@@ -33,11 +32,12 @@ angular.module('chat.services', [])
 
 				.then(function(firebaseUser) {
 					// console.log("User created with uid: " + firebaseUser.uid);
-					// Auth.createProfile(firebaseUser.uid, user);
+					Auth.createProfile(firebaseUser.uid, user);
 
-					ref.child("users").child(firebaseUser.uid).set(user);
+					
                 	$ionicLoading.hide();
-                	$location.path("/");
+                	Utils.showAlert("Welcome!","Account successfully created.");
+                	$location.path("/home");
 				}).catch(function(e) {
 					console.log(e);
 					Utils.showAlert("Error: ", e.message);
