@@ -66,16 +66,16 @@ angular.module('chat.controllers', [])
 	$scope.register = function(user) {
 		if(angular.isDefined(user)){
 			Utils.show();
-			Auth.register(user)
-			.then(function() {
-				Utils.hide();
-				// console.log("Account:" + JSON.stringify(user));
-				Utils.showAlert("Welcome!","Account successfully created.");
-				$location.path('/');
-			}, function(e) {
-				Utils.hide();
-				Utils.errMessage(e);
-			});
+			Auth.register(user);
+			// .then(function() {
+			// 	Utils.hide();
+			// 	// console.log("Account:" + JSON.stringify(user));
+			// 	Utils.showAlert("Welcome!","Account successfully created.");
+			// 	$location.path('/');
+			// }, function(e) {
+			// 	Utils.hide();
+			// 	Utils.errorMessage(e);
+			// });
 		}
 	};
 });

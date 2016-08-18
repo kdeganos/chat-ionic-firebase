@@ -1,6 +1,6 @@
 angular.module('chat.services', [])
 
-.factory('Auth', function (FURL, $log, $firebaseAuth, $firebaseArray, $firebaseObject, Utils) {
+.factory('Auth', function (FURL, $log, $firebaseAuth, $firebaseArray, $firebaseObject, $ionicLoading, $location, Utils) {
 
 	firebase.initializeApp(FURL);
 
@@ -29,12 +29,32 @@ angular.module('chat.services', [])
 
 		register: function(user) {
 			return auth.$createUserWithEmailAndPassword(user.email, user.password)
+			// auth.$createUserWithEmailAndPassword(user.email, user.password)
+
 				.then(function(firebaseUser) {
-					console.log("User create with uid: " + firebaseUser.uid);
-					Auth.createProfile(firebaseUser.uid, user);
-				}).catch(function(error) {
-					console.log(error);
+					// console.log("User created with uid: " + firebaseUser.uid);
+					// Auth.createProfile(firebaseUser.uid, user);
+
+					ref.child("users").child(firebaseUser.uid).set(user);
+                	$ionicLoading.hide();
+                	$location.path("/");
+				}).catch(function(e) {
+					console.log(e);
+					Utils.showAlert("Error: ", e.message);
+					$ionicLoading.hide();
 				});
+
+
+
+			// 	.then(function() {
+			// 	Utils.hide();
+			// 	// console.log("Account:" + JSON.stringify(user));
+			// 	Utils.showAlert("Welcome!","Account successfully created.");
+			// 	$location.path('/');
+			// }, function(e) {
+			// 	Utils.hide();
+			// 	Utils.errorMessage(e);
+			// });
 		},
 
 		logout: function() {
@@ -46,8 +66,8 @@ angular.module('chat.services', [])
 			return auth.$sendPaswordResetEmail(email)
 				.then(function() {
 					Utils.showAlert("Exit.", "A key has been sent to your email.")
-				}).catch(function(error) {
-					Utils.errorMessage(error);
+				}).catch(function(e) {
+					Utils.errorMessage(e);
 				});
 		},
 
@@ -85,18 +105,18 @@ angular.module('chat.services', [])
 		},
 
 		errorMessage: function(e) {
-			var msg = "Unknown Error...";
+			// var msg = "Unknown Error...";
 
-			if(e && e.code) {
-				switch (e.code) {
-					case "EMAIL_TAKEN": msg = "This email address has already been registered."; break;
-					case "IVALID_EMAIL": msg = "Invalid email."; break;
-					case "NETWORK_ERROR": msg = "Network Error."; break;
-					case "INVALID_PASSWORD": msg = "Invalid Passowrd."; break;
-					case "INVALID_USER": msg = "Invalid User."; break;
-				}
-			}
-			Utils.showAlert("Error: ", msg);
+			// if(e && e.code) {
+			// 	switch (e.code) {
+			// 		case "auth/email-already-in-use": msg = e.message; break;
+			// 		case "auth/invalid-email": msg = e.message; break;
+			// 		case "NETWORK_ERROR": msg = "Network Error."; break;
+			// 		case "auth/weak-password": msg = e.message; break;
+			// 		case "INVALID_USER": msg = "Invalid User."; break;
+			// 	}
+			// }
+			Utils.showAlert("Error: ", e.message);
 		}
 	};
 	return Utils;
