@@ -19,7 +19,7 @@ angular.module('chat.services', [])
 			var profile = {
 				id: uid,
 				email: user.email,
-				registered_in: Date()
+				registration_date: Date()
 			};
 
 			var messagesRef = $firebaseArray(firebase.database().ref().child("users"));

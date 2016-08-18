@@ -3,11 +3,11 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('chat', ['ionic', 'ngStorage', 'ngCordova', 'firebase', 'ngMessages'])
+angular.module('chat', ['ionic', 'chat.controllers', 'chat.services', 'ngStorage', 'ngCordova', 'firebase', 'ngMessages'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function(FURL) {
-    if(window.cordova && window.cordova.plugins.Keyboard) {
+    if(window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -26,26 +26,27 @@ angular.module('chat', ['ionic', 'ngStorage', 'ngCordova', 'firebase', 'ngMessag
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
 
+    .state('forgot-password', {
+      url: '/forgot-password',
+      templateUrl: 'templates/forgot-password.html',
+      controller: 'forgotPasswordCtrl'
+    })
     .state('home', {
       url: '/home',
       templateUrl: 'templates/home.html',
-      controller: 'profileController'
+      controller: 'profileCtrl'
     })
     .state('login', {
       url: '/login',
       templateUrl: 'templates/login.html',
-      controller: 'loginController'
-    })
-    .state('lostPassword', {
-      url: '/lostPassword',
-      templateUrl: 'templates/lostPassword.html'
-      controller: 'lostPasswordController'
+      controller: 'loginCtrl'
     })
     .state('registration', {
-      url: 'registration',
-      templateUrl: 'templates/registration.html'
-      controller: 'registrationController'
+      url: '/registration',
+      templateUrl: 'templates/registration.html',
+      controller: 'registrationCtrl'
     });
+    // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise("/login");
 })
 
