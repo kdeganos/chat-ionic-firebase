@@ -78,4 +78,36 @@ angular.module('chat.controllers', [])
 			// });
 		}
 	};
-});
+})
+
+.controller('chatsCtrl', function($scope, $state, $firebase, $firebaseArray, $firebaseAuth, $location, Auth, FURL) {
+	var ref = firebase.database().ref();
+	var user = firebase.auth().currentUser;
+	var chatsRef = ref.child("chats");
+
+
+	$scope.messages = $firebaseArray(chatsRef);
+        $scope.addMessage = function(e) {
+           $scope.sendMsg = function() {
+             	
+             	var element = document.getElementById("chatbox");
+             	element.scrollTop = element.scrollHeight;
+
+                 $scope.messages.$add({message: $scope.msg, date: Date(), name: user.email, userId: user.uid});
+                 $scope.msg = "";
+           
+                }
+        }
+        $scope.clear = function(){
+          $scope.name = "";
+        }
+    
+    $scope.logOut = function () {
+		Auth.logout();
+		$location.path("/login");
+	}
+        
+
+
+})
+;

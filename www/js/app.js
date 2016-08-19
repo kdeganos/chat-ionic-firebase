@@ -34,7 +34,7 @@ angular.module('chat', ['ionic', 'chat.controllers', 'chat.services', 'ngStorage
     .state('home', {
       url: '/home',
       templateUrl: 'templates/home.html',
-      controller: 'profileCtrl'
+      controller: 'chatsCtrl'
     })
     .state('login', {
       url: '/login',

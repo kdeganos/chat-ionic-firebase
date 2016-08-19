@@ -1,4 +1,4 @@
-angular.module('chat.services', [])
+angular.module('chat.services', ['firebase'])
 
 .factory('Auth', function (FURL, $log, $firebaseAuth, $firebaseArray, $firebaseObject, $ionicLoading, $location, Utils) {
 
@@ -120,4 +120,9 @@ angular.module('chat.services', [])
 		}
 	};
 	return Utils;
-});
+})
+
+// .factory('Chats', function ($firebase) {
+// 	var ref = firebase.database().ref();
+// })
+;

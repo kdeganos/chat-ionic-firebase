@@ -42,4 +42,11 @@ label.item.valid-lr {
         height: 128px;
         margin: 30px auto 0;
         box-shadow: 0px 0px 4px rgba(0,0,0,0.7);
+}
+
+[scroll-glue] {
+        height: 200px;
+        overflow-y: scroll;
+        border: 2px solid grey;
+        padding-bottom: 30px;
       }
