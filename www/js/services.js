@@ -2,7 +2,7 @@ angular.module('chat.services', ['firebase'])
 
 .factory('Auth', function (FURL, $log, $firebaseAuth, $firebaseArray, $firebaseObject, $ionicLoading, $location, Utils) {
 
-	firebase.initializeApp(FURL);
+	// firebase.initializeApp(FURL);
 
 	var ref = firebase.database().ref();
 
@@ -63,7 +63,8 @@ angular.module('chat.services', ['firebase'])
 		},
 
 		resetPassword: function(email) {
-			return auth.$sendPaswordResetEmail(email)
+			var fAuth = firebase.auth();
+			return fAuth.sendPasswordResetEmail(email)
 				.then(function() {
 					Utils.showAlert("Exit.", "A key has been sent to your email.")
 				}).catch(function(e) {

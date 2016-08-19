@@ -4,7 +4,7 @@ angular.module('chat.controllers', [])
 
 	$scope.resetpassword = function(user) {
 		if(angular.isDefined(user)){
-			Auth.resetpassword(user.email)
+			Auth.resetPassword(user.email)
 			.then(function() {
           $location.path('/login');
       			}, function(e) {
