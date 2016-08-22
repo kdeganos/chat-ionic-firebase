@@ -1,6 +1,6 @@
 angular.module('chat.controllers', [])
 
-.controller('forgotPasswordCtrl', function ($scope, $state, $cordovaOauth, $localStorage, $location,$http, $ionicPopup, $firebaseObject, Auth, FURL, Utils) {
+.controller('ForgotPasswordCtrl', function ($scope, $state, $cordovaOauth, $localStorage, $location,$http, $ionicPopup, $firebaseObject, Auth, FURL, Utils) {
 
 	$scope.resetpassword = function(user) {
 		if(angular.isDefined(user)){
@@ -13,7 +13,7 @@ angular.module('chat.controllers', [])
 	};
 })
 
-.controller('homeCtrl', function($scope, $state, $cordovaOauth, $localStorage, $log, $location, $http, $ionicPopup, $firebaseObject, Auth, FURL, Utils) {
+.controller('HomeCtrl', function($scope, $state, $cordovaOauth, $localStorage, $log, $location, $http, $ionicPopup, $firebaseObject, Auth, FURL, Utils) {
 	var ref = firebase.database().ref();
 
 	$scope.logOut = function () {
@@ -26,7 +26,7 @@ angular.module('chat.controllers', [])
 	}
 })
 
-.controller('loginCtrl', function($scope, $state, $cordovaOauth, $localStorage, $log, $location, $http, $ionicPopup, $firebaseAuth, $firebaseObject, $log, Auth, FURL, Utils) {
+.controller('LoginCtrl', function($scope, $state, $cordovaOauth, $localStorage, $log, $location, $http, $ionicPopup, $firebaseAuth, $firebaseObject, $log, Auth, FURL, Utils) {
 	var auth = $firebaseAuth();
 	var ref = firebase.database().ref();
 	var userkey = "";
@@ -39,8 +39,8 @@ angular.module('chat.controllers', [])
 			Auth.login(user).then(function(authData) {
 				$log.log("User ID: " + authData);
 				Utils.hide();
-				$state.go('home');
-				$log.log("Chat", "Home");
+				$state.go('tab.users');
+				// $log.log("Chat", "Home");
 			}, function(e) {
 				Utils.hide();
 				Utils.errorMessage(e);
@@ -49,7 +49,7 @@ angular.module('chat.controllers', [])
 	};
 })
 
-.controller('profileCtrl', function ($scope, $state, $cordovaOauth, $localStorage, $location, $http,$ionicPopup, $firebaseObject, $log, Auth, FURL, Utils) {
+.controller('ProfileCtrl', function ($scope, $state, $cordovaOauth, $localStorage, $location, $http,$ionicPopup, $firebaseObject, $log, Auth, FURL, Utils) {
 	// var ref = new Firebase(FURL);
 	$scope.user = angular.fromJson($localStorage.profile);
 	$log.log("User:", $localStorage.email);
@@ -61,7 +61,7 @@ angular.module('chat.controllers', [])
 
 })
 
-.controller('registrationCtrl', function ($scope, $state, $cordovaOauth, $localStorage, $location, $http, $ionicPopup, $firebaseObject, Auth, FURL, Utils) {
+.controller('RegistrationCtrl', function ($scope, $state, $cordovaOauth, $localStorage, $location, $http, $ionicPopup, $firebaseObject, Auth, FURL, Utils) {
 
 	$scope.register = function(user) {
 		if(angular.isDefined(user)){
@@ -80,7 +80,7 @@ angular.module('chat.controllers', [])
 	};
 })
 
-.controller('chatsCtrl', function($scope, $state, $firebase, $firebaseArray, $firebaseAuth, $location, Auth, FURL) {
+.controller('ChatsCtrl', function($scope, $state, $firebase, $firebaseArray, $firebaseAuth, $location, Auth, FURL) {
 	var ref = firebase.database().ref();
 	var user = firebase.auth().currentUser;
 	var chatsRef = ref.child("chats");
@@ -104,10 +104,17 @@ angular.module('chat.controllers', [])
     
     $scope.logOut = function () {
 		Auth.logout();
-		$location.path("/login");
+		$state.go("login");
 	}
         
 
 
+})
+
+.controller('UsersCtrl', function($scope, $state, $firebase, $firebaseArray, Auth, FURL) {
+	var ref = firebase.database().ref();
+	var usersRef = ref.child("users");
+
+	$scope.users = $firebaseArray(usersRef);
 })
 ;

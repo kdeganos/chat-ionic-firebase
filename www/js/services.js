@@ -37,7 +37,7 @@ angular.module('chat.services', ['firebase'])
 					
                 	$ionicLoading.hide();
                 	Utils.showAlert("Welcome!","Account successfully created.");
-                	$location.path("/home");
+                	$location.path("/tab-users");
 				}).catch(function(e) {
 					console.log(e);
 					Utils.showAlert("Error: ", e.message);
@@ -66,7 +66,7 @@ angular.module('chat.services', ['firebase'])
 			var fAuth = firebase.auth();
 			return fAuth.sendPasswordResetEmail(email)
 				.then(function() {
-					Utils.showAlert("Exit.", "A key has been sent to your email.")
+					Utils.showAlert("Password Reset Email", "A key has been sent to your email.")
 				}).catch(function(e) {
 					Utils.errorMessage(e);
 				});
