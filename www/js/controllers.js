@@ -86,26 +86,53 @@ angular.module('chat.controllers', [])
 	var chatsRef = ref.child("chats");
 	var element = document.getElementById("chatbox");
 
-	// chatsRef.on('child_added', function(data) {
-	// 	element.scrollTop = element.scrollHeight;
+	chatsRef.off();	
 
-	// })
+	var setMessages = function (data) {
+		$scope.messages = $firebaseArray(chatsRef);
+		element.scrollTop = element.scrollHeight;
 
-	$scope.messages = $firebaseArray(chatsRef);
         $scope.addMessage = function(e) {
            $scope.sendMsg = function() {
              	
              	
-             	element.scrollTop = element.scrollHeight;
+             	// element.scrollTop = element.scrollHeight;
 
                  $scope.messages.$add({message: $scope.msg, date: Date(), name: user.email, userId: user.uid});
                  $scope.msg = "";
            
+	  			element.scrollTop = element.scrollHeight;
                 }
+
         }
         $scope.clear = function(){
           $scope.name = "";
         }
+
+	}
+
+	$scope.$on('$ionicView.enter', function() {
+
+		chatsRef.on('child_added', setMessages);
+		chatsRef.on('child_changed', setMessages);
+	});
+	
+
+	// $scope.messages = $firebaseArray(chatsRef);
+ //        $scope.addMessage = function(e) {
+ //           $scope.sendMsg = function() {
+             	
+             	
+ //             	element.scrollTop = element.scrollHeight;
+
+ //                 $scope.messages.$add({message: $scope.msg, date: Date(), name: user.email, userId: user.uid});
+ //                 $scope.msg = "";
+           
+ //                }
+ //        }
+ //        $scope.clear = function(){
+ //          $scope.name = "";
+ //        }
     
     $scope.logOut = function () {
 		Auth.logout();
@@ -120,7 +147,11 @@ angular.module('chat.controllers', [])
 	var ref = firebase.database().ref();
 	var usersRef = ref.child("users");
 
-	$scope.users = $firebaseArray(usersRef);
+	$scope.$on('$ionicView.enter', function() {
+		console.log(usersRef.toString());
+		$scope.users = $firebaseArray(usersRef);
+
+	});
 })
 
 .controller('AccountCtrl', function($scope, $state, $firebase) {
