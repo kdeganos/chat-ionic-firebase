@@ -84,13 +84,18 @@ angular.module('chat.controllers', [])
 	var ref = firebase.database().ref();
 	var user = firebase.auth().currentUser;
 	var chatsRef = ref.child("chats");
+	var element = document.getElementById("chatbox");
 
+	// chatsRef.on('child_added', function(data) {
+	// 	element.scrollTop = element.scrollHeight;
+
+	// })
 
 	$scope.messages = $firebaseArray(chatsRef);
         $scope.addMessage = function(e) {
            $scope.sendMsg = function() {
              	
-             	var element = document.getElementById("chatbox");
+             	
              	element.scrollTop = element.scrollHeight;
 
                  $scope.messages.$add({message: $scope.msg, date: Date(), name: user.email, userId: user.uid});
@@ -116,5 +121,9 @@ angular.module('chat.controllers', [])
 	var usersRef = ref.child("users");
 
 	$scope.users = $firebaseArray(usersRef);
+})
+
+.controller('AccountCtrl', function($scope, $state, $firebase) {
+
 })
 ;
