@@ -80,18 +80,24 @@ angular.module('chat.controllers', [])
 	};
 })
 
-.controller('ChatsCtrl', function($scope, $state, $firebase, $firebaseArray, $firebaseAuth, $location, Auth, FURL) {
+.controller('OneToOneCtrl', function($scope, $state, $firebase, $firebaseArray, $firebaseAuth, $location, Auth, FURL) {
+
+
+})
+
+.controller('ChatsCtrl', function($scope, $state, $stateParams, $firebase, $firebaseArray, $firebaseAuth, $location, Auth, FURL) {
 	var ref = firebase.database().ref();
 	var user = firebase.auth().currentUser;
 	// var user = $firebaseAuth.currentUser;
 	var chatsRef = ref.child("chats");
 	// var element = document.getElementById("chatbox");
 
+console.log($stateParams.channelId);
+
 	// console.log(user.toString());
 	$scope.$on('$ionicView.enter', function() {
 		user = firebase.auth().currentUser;
 		$scope.messages = $firebaseArray(chatsRef);
-	console.log(user.email);
 
 		// user = firebase.auth().currentUser;
 		chatsRef.off();	
@@ -108,15 +114,14 @@ angular.module('chat.controllers', [])
 	}
 
 	$scope.addMessage = function(e) {
-				user = firebase.auth().currentUser;
+		user = firebase.auth().currentUser;
 
-           $scope.sendMsg = function() {
-             	
-             	console.log($scope.msg)
-                 $scope.messages.$add({message: $scope.msg, date: Date(), name: user.email, userId: user.uid});
-                 $scope.msg = "";
-           
-            }
+    	$scope.sendMsg = function() {
+         	
+             $scope.messages.$add({message: $scope.msg, date: Date(), name: user.email, userId: user.uid});
+             $scope.msg = "";
+       
+        }
 
     }
     $scope.clear = function(){
@@ -150,7 +155,32 @@ angular.module('chat.controllers', [])
 
 })
 
-.controller('UsersCtrl', function($scope, $state, $firebase, $firebaseArray, Auth, FURL) {
+.controller('UsersCtrl', function($scope, $state, $firebase, $firebaseArray, $location, Auth, FURL) {
+	var ref = firebase.database().ref();
+	var usersRef = ref.child("users");
+	var user = firebase.auth().currentUser;
+
+	$scope.$on('$ionicView.enter', function() {
+		user = firebase.auth().currentUser;
+		$scope.users = $firebaseArray(usersRef);
+
+	});
+
+	$scope.openOneChannel = function(user2id) {
+		user = firebase.auth().currentUser;
+
+		var channelId = (user.uid<user2id ? user.uid+'_'+user2id : user2id+'_'+user.uid);
+
+		console.log(user.uid + "_" + user2id);
+      	$location.path("/channel/" + channelId);
+
+	}
+})
+
+.controller('AccountCtrl', function($scope, $state, $firebase) {
+})
+
+.controller('ChatsListCtrl', function($scope, $state, $firebase, $firebaseArray, Auth, FURL) {
 	var ref = firebase.database().ref();
 	var usersRef = ref.child("users");
 
@@ -159,9 +189,5 @@ angular.module('chat.controllers', [])
 		$scope.users = $firebaseArray(usersRef);
 
 	});
-})
-
-.controller('AccountCtrl', function($scope, $state, $firebase) {
-
 })
 ;

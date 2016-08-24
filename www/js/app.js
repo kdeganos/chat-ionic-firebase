@@ -50,19 +50,19 @@ angular.module('chat', ['ionic', 'chat.controllers', 'chat.services', 'ngStorage
       views: {
         'tab-chats': {
           templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
+          controller: 'ChatListCtrl'
         }
       }
     })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
-        }
-      }
-    })
+    // .state('tab.chat-detail', {
+    //   url: '/chats/:chatId',
+    //   views: {
+    //     'tab-chats': {
+    //       templateUrl: 'templates/chat-detail.html',
+    //       controller: 'ChatsCtrl'
+    //     }
+    //   }
+    // })
 
   .state('tab.account', {
     url: '/account',
@@ -82,6 +82,11 @@ angular.module('chat', ['ionic', 'chat.controllers', 'chat.services', 'ngStorage
     .state('home', {
       url: '/home',
       templateUrl: 'templates/home.html',
+      controller: 'ChatsCtrl'
+    })
+    .state('channel', {
+      url: '/channel/:channelId',
+      templateUrl: 'templates/chat-detail.html',
       controller: 'ChatsCtrl'
     })
     .state('login', {

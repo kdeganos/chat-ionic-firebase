@@ -123,25 +123,59 @@ angular.module('chat.services', ['firebase'])
 	return Utils;
 })
 
-.factory('Chats', function ($firebase, Rooms) {
+.factory('Chats', function($firebase, Channels) {
 	var selectedRoomId;
 
 	var ref = firebase.database().ref();
     var chats;
-})
-
-.factory('Rooms', function ($firebase) {
-    // Might use a resource here that returns a JSON array
-	var ref = firebase.database().ref();
-    var rooms = ref.child('rooms').$asArray();
 
     return {
-        all: function () {
-            return rooms;
+    	all: function() {
+    		return chats;
+    	},
+    	// remove: function(chat) {
+    	// 	chats.$remove(chat).then(function(ref) {
+    	// 		ref.key( === chat.$id;)
+    	// 	});
+    	// },
+    	// get: function(chatId) {
+
+    	// },
+    	getSelectedChannelName: function() {
+    		var selectedChannel;
+    		if (selectedChannelId && selectedChannelId != null) {
+    			selectedChannel = Channels.get(selectedChannelId);
+    			if (selectedChannel) {
+    				return selectedChannel.name;
+    			} else {
+    				return null;
+    			}
+    		} else {
+    			return null;
+    		}
+    	},
+    	selectChannel: function (channelId) {
+            console.log("selecting the channel with id: " + channelId);
+            selectedChannelId = channelId;
+            if (!isNaN(channelId)) {
+                chats = $firebase(ref.child('channels').child(selectedChannelId).child('chats')).$asArray();
+            }
         },
-        get: function (roomId) {
+    }
+})
+
+.factory('Channels', function($firebase) {
+    
+	var ref = firebase.database().ref();
+    var channels = ref.child('channels').$asArray();
+
+    return {
+        all: function() {
+            return channels;
+        },
+        get: function(roomId) {
             // Simple index lookup
-            return rooms.$getRecord(roomId);
+            return channels.$getRecord(channelId);
         }
     }
 })
