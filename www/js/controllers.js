@@ -83,39 +83,46 @@ angular.module('chat.controllers', [])
 .controller('ChatsCtrl', function($scope, $state, $firebase, $firebaseArray, $firebaseAuth, $location, Auth, FURL) {
 	var ref = firebase.database().ref();
 	var user = firebase.auth().currentUser;
+	// var user = $firebaseAuth.currentUser;
 	var chatsRef = ref.child("chats");
-	var element = document.getElementById("chatbox");
+	// var element = document.getElementById("chatbox");
 
-	chatsRef.off();	
-
-	var setMessages = function (data) {
-		$scope.messages = $firebaseArray(chatsRef);
-		element.scrollTop = element.scrollHeight;
-
-        $scope.addMessage = function(e) {
-           $scope.sendMsg = function() {
-             	
-             	
-             	// element.scrollTop = element.scrollHeight;
-
-                 $scope.messages.$add({message: $scope.msg, date: Date(), name: user.email, userId: user.uid});
-                 $scope.msg = "";
-           
-	  			element.scrollTop = element.scrollHeight;
-                }
-
-        }
-        $scope.clear = function(){
-          $scope.name = "";
-        }
-
-	}
-
+	// console.log(user.toString());
 	$scope.$on('$ionicView.enter', function() {
+		user = firebase.auth().currentUser;
+		$scope.messages = $firebaseArray(chatsRef);
+	console.log(user.email);
+
+		// user = firebase.auth().currentUser;
+		chatsRef.off();	
 
 		chatsRef.on('child_added', setMessages);
 		chatsRef.on('child_changed', setMessages);
 	});
+
+	var setMessages = function (data) {
+		$scope.messages = $firebaseArray(chatsRef);
+		// element.scrollTop = element.scrollHeight;
+		// user = firebase.auth().currentUser;      
+
+	}
+
+	$scope.addMessage = function(e) {
+				user = firebase.auth().currentUser;
+
+           $scope.sendMsg = function() {
+             	
+             	console.log($scope.msg)
+                 $scope.messages.$add({message: $scope.msg, date: Date(), name: user.email, userId: user.uid});
+                 $scope.msg = "";
+           
+            }
+
+    }
+    $scope.clear = function(){
+      $scope.name = "";
+    }
+
 	
 
 	// $scope.messages = $firebaseArray(chatsRef);

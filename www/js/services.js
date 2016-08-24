@@ -123,7 +123,26 @@ angular.module('chat.services', ['firebase'])
 	return Utils;
 })
 
-// .factory('Chats', function ($firebase) {
-// 	var ref = firebase.database().ref();
-// })
+.factory('Chats', function ($firebase, Rooms) {
+	var selectedRoomId;
+
+	var ref = firebase.database().ref();
+    var chats;
+})
+
+.factory('Rooms', function ($firebase) {
+    // Might use a resource here that returns a JSON array
+	var ref = firebase.database().ref();
+    var rooms = ref.child('rooms').$asArray();
+
+    return {
+        all: function () {
+            return rooms;
+        },
+        get: function (roomId) {
+            // Simple index lookup
+            return rooms.$getRecord(roomId);
+        }
+    }
+})
 ;
