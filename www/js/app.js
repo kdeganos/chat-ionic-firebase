@@ -86,7 +86,7 @@ angular.module('chat', ['ionic', 'chat.controllers', 'chat.services', 'ngStorage
     })
     .state('channel', {
       url: '/channel/:channelId',
-      templateUrl: 'templates/chat-detail.html',
+      templateUrl: 'templates/channel.html',
       controller: 'ChatsCtrl'
     })
     .state('login', {

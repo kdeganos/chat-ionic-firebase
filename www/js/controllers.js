@@ -88,41 +88,32 @@ angular.module('chat.controllers', [])
 .controller('ChatsCtrl', function($scope, $state, $stateParams, $firebase, $firebaseArray, $firebaseAuth, $location, Auth, FURL) {
 	var ref = firebase.database().ref();
 	var user = firebase.auth().currentUser;
-	// var user = $firebaseAuth.currentUser;
-	var chatsRef = ref.child("chats");
-	// var element = document.getElementById("chatbox");
+	var channelRef = ref.child("channels").child($stateParams.channelId);
 
-console.log($stateParams.channelId);
+	console.log($stateParams.channelId);
 
-	// console.log(user.toString());
 	$scope.$on('$ionicView.enter', function() {
 		user = firebase.auth().currentUser;
-		$scope.messages = $firebaseArray(chatsRef);
 
-		// user = firebase.auth().currentUser;
-		chatsRef.off();	
+		$scope.messages = $firebaseArray(channelRef);
 
-		chatsRef.on('child_added', setMessages);
-		chatsRef.on('child_changed', setMessages);
+		channelRef.off();	
+
+		channelRef.on('child_added', setMessages);
+		channelRef.on('child_changed', setMessages);
 	});
 
 	var setMessages = function (data) {
-		$scope.messages = $firebaseArray(chatsRef);
-		// element.scrollTop = element.scrollHeight;
-		// user = firebase.auth().currentUser;      
-
+		$scope.messages = $firebaseArray(channelRef);
 	}
 
 	$scope.addMessage = function(e) {
 		user = firebase.auth().currentUser;
 
     	$scope.sendMsg = function() {
-         	
              $scope.messages.$add({message: $scope.msg, date: Date(), name: user.email, userId: user.uid});
              $scope.msg = "";
-       
         }
-
     }
     $scope.clear = function(){
       $scope.name = "";
@@ -157,7 +148,7 @@ console.log($stateParams.channelId);
 
 .controller('UsersCtrl', function($scope, $state, $firebase, $firebaseArray, $location, Auth, FURL) {
 	var ref = firebase.database().ref();
-	var usersRef = ref.child("users");
+	var usersRef = ref.child('users');
 	var user = firebase.auth().currentUser;
 
 	$scope.$on('$ionicView.enter', function() {
@@ -171,9 +162,7 @@ console.log($stateParams.channelId);
 
 		var channelId = (user.uid<user2id ? user.uid+'_'+user2id : user2id+'_'+user.uid);
 
-		console.log(user.uid + "_" + user2id);
       	$location.path("/channel/" + channelId);
-
 	}
 })
 
