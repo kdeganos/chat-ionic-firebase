@@ -112,6 +112,18 @@ angular.module('chat.controllers', [])
 
     	$scope.sendMsg = function() {
              $scope.messages.$add({message: $scope.msg, date: Date(), name: user.email, userId: user.uid});
+
+		var notificationObj = { contents: {en: $scope.msg}, include_player_ids: ["8aa3abb9-c13d-4505-a3dd-acf9aa3a7fbb"]};
+	  	window.plugins.OneSignal.postNotification(notificationObj,
+		    function(successResponse) {
+		      console.log("Notification Post Success:", successResponse);
+		    },
+		    function (failedResponse) {
+		      console.log("Notification Post Failed: ", failedResponse);
+		      alert("Notification Post Failed:\n" + JSON.stringify(failedResponse));
+		    }
+		);
+
              $scope.msg = "";
         }
     }

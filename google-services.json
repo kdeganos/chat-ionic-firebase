@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "102800957884",
+    "firebase_url": "https://ionic-chat-fe17f.firebaseio.com",
+    "project_id": "ionic-chat-fe17f",
+    "storage_bucket": "ionic-chat-fe17f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:102800957884:android:3b7617361e7f5a76",
+        "android_client_info": {
+          "package_name": "com.ionicframework.firebasechat757798"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "102800957884-785fknl448c1lqke0o15oc3nijahh9e0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4Kutm1mog9Sr_cUzLWWA3M4_3iZ5tClE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

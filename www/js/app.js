@@ -7,6 +7,24 @@ angular.module('chat', ['ionic', 'chat.controllers', 'chat.services', 'ngStorage
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function(FURL) {
+
+    // Enable to debug issues.
+  // window.plugins.OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
+  
+  var notificationOpenedCallback = function(jsonData) {
+    console.log('didReceiveRemoteNotificationCallBack: ' + JSON.stringify(jsonData));
+  };
+  window.plugins.OneSignal.init("f4b1938f-dc11-4784-bb88-737ef29292ab",
+                                 {googleProjectNumber: "672728738668"},
+                                 notificationOpenedCallback);
+  
+  // window.plugins.OneSignal.getIds(function(ids) {
+  //   console.log('getIds: ' + JSON.stringify(ids));
+  //   alert("userId = " + ids.userId + ", pushToken = " + ids.pushToken);
+  // });
+  // Show an alert box if a notification comes in when the user is in your app.
+  window.plugins.OneSignal.enableInAppAlertNotification(true);
+
     if(window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
