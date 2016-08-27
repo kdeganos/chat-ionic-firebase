@@ -104,6 +104,7 @@ angular.module('chat', ['ionic', 'chat.controllers', 'chat.services', 'ngStorage
     })
     .state('channel', {
       url: '/channel/:channelId',
+      params: {channelId: {dynamic: true}},
       templateUrl: 'templates/channel.html',
       controller: 'ChatsCtrl'
     })

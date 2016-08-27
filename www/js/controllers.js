@@ -92,6 +92,10 @@ angular.module('chat.controllers', [])
 
 	console.log($stateParams.channelId);
 
+	// $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+ //    	viewData.enableBack = true;
+	// });
+
 	$scope.$on('$ionicView.enter', function() {
 		user = firebase.auth().currentUser;
 
@@ -131,6 +135,10 @@ angular.module('chat.controllers', [])
       $scope.name = "";
     }
 
+    $scope.goBack = function() {
+    	$state.go('tab.chats');
+	}
+
 	
 
 	// $scope.messages = $firebaseArray(chatsRef);
@@ -163,6 +171,10 @@ angular.module('chat.controllers', [])
 	var usersRef = ref.child('users');
 	var user = firebase.auth().currentUser;
 
+	// $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+ //    viewData.enableBack = true;
+	// });
+
 	$scope.$on('$ionicView.enter', function() {
 		user = firebase.auth().currentUser;
 		$scope.users = $firebaseArray(usersRef);
@@ -173,8 +185,10 @@ angular.module('chat.controllers', [])
 		user = firebase.auth().currentUser;
 
 		var channelId = (user.uid<user2id ? user.uid+'_'+user2id : user2id+'_'+user.uid);
+		// $scope.channelId = (user.uid<user2id ? user.uid+'_'+user2id : user2id+'_'+user.uid);
 
-      	$location.path("/channel/" + channelId);
+      	// $location.path("/channel/" + channelId);
+      	$state.go('channel', {channelId: channelId})
 	}
 })
 
