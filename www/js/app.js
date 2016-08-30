@@ -63,12 +63,12 @@ angular.module('chat', ['ionic', 'chat.controllers', 'chat.services', 'ngStorage
     }
   })
 
-  .state('tab.chats', {
-      url: '/chats',
+  .state('tab.channels', {
+      url: '/channels',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatListCtrl'
+        'tab-channels': {
+          templateUrl: 'templates/tab-channels.html',
+          controller: 'ChannelsListCtrl'
         }
       }
     })
@@ -119,7 +119,7 @@ angular.module('chat', ['ionic', 'chat.controllers', 'chat.services', 'ngStorage
       controller: 'RegistrationCtrl'
     });
     // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise("/login");
+  // $urlRouterProvider.otherwise("/login");
 })
 
 .constant('FURL', {

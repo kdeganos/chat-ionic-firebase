@@ -1,0 +1,16 @@
+<ion-view view-title="Channels">
+  <ion-content>
+    <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="channel in channels" type="item-text-wrap" ng-click="openChannel(channel.channelId)">
+<!--        ui-sref="channel({channelId: channelId})">
+ -->       <!-- <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="user in users" type="item-text-wrap" href="#/tab/user/{{user.id}}"> -->
+        <h2>{{channel.name}}</h2>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+<!-- 
+        <ion-option-button class="button-assertive" ng-click="remove(chat)">
+          Delete
+        </ion-option-button> -->
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
