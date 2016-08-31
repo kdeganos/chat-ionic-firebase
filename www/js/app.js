@@ -119,7 +119,7 @@ angular.module('chat', ['ionic', 'chat.controllers', 'chat.services', 'ngStorage
       controller: 'RegistrationCtrl'
     });
     // if none of the above states are matched, use this as the fallback
-  // $urlRouterProvider.otherwise("/login");
+  $urlRouterProvider.otherwise("/login");
 })
 
 .constant('FURL', {

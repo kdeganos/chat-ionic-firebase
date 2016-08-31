@@ -90,8 +90,6 @@ angular.module('chat.controllers', [])
 	var user = firebase.auth().currentUser;
 	var channelRef = ref.child('channels').child($stateParams.channelId);
 
-	console.log($stateParams.channelId);
-
 	// $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
  //    	viewData.enableBack = true;
 	// });
@@ -108,7 +106,7 @@ angular.module('chat.controllers', [])
 	});
 
 	var setMessages = function (data) {
-		$scope.messages = $firebaseArray(channelRef);
+		$scope.messages = $firebaseArray(channelRef.child('chats'));
 	}
 
 	$scope.addMessage = function(e) {
@@ -193,6 +191,8 @@ angular.module('chat.controllers', [])
 		var channelId = (user.uid<user2id ? user.uid+'_'+user2id : user2id+'_'+user.uid);
 
 		channelsRef.child(channelId).child('users').child(user.uid).set(user.email);
+		channelsRef.child(channelId).child('channelId').set(channelId);
+
 		usersRef.child(user.uid).child('channels').child(channelId).child('name').set(user2email);
 		usersRef.child(user.uid).child('channels').child(channelId).child('channelId').set(channelId);
 
@@ -212,23 +212,21 @@ angular.module('chat.controllers', [])
 .controller('AccountCtrl', function($scope, $state, $firebase) {
 })
 
-.controller('ChannelsListCtrl', function($scope, $state, $firebase, $firebaseArray, Auth, FURL) {
+.controller('ChannelsListCtrl', function($scope, $state, $firebase, $firebaseArray, $log, Auth, FURL) {
 	var user = firebase.auth().currentUser;
 	var ref = firebase.database().ref();
-	var channelsRef = ref.child('users').child(user.uid).child('channels');
-	var usersRef = ref.child('users');
+	var userChannelsRef;
+	var allChannelsRef =  ref.child('channels');
+	var allChannels = [];
+
 
 	$scope.$on('$ionicView.enter', function() {
 		user = firebase.auth().currentUser;
-		var allChannels = $firebaseArray(channelsRef)
-		// var userChannels = function() {
-		
-		// 	allChannels.forEach(function(channel) {
-		// 		if channel
-		// 	});
 
-		// }
-		$scope.channels = allChannels;
+		userChannelsRef = ref.child('users').child(user.uid).child('channels');
+		$scope.channels = $firebaseArray(userChannelsRef);
+		
+
 	})
 
 	$scope.openChannel = function(channelId) {
