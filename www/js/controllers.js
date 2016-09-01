@@ -39,7 +39,7 @@ angular.module('chat.controllers', [])
 			Auth.login(user).then(function(authData) {
 				$log.log("User ID: " + authData);
 				Utils.hide();
-				$state.go('tab.users');
+				$state.go('tab.channels');
 				// $log.log("Chat", "Home");
 			}, function(e) {
 				Utils.hide();
@@ -85,10 +85,11 @@ angular.module('chat.controllers', [])
 
 })
 
-.controller('ChatsCtrl', function($scope, $state, $stateParams, $firebase, $firebaseArray, $firebaseAuth, $location, Auth, FURL) {
+.controller('ChatsCtrl', function($scope, $state, $stateParams, $firebase, $firebaseArray, $firebaseAuth, $location, $log, Auth, FURL) {
 	var ref = firebase.database().ref();
 	var user = firebase.auth().currentUser;
 	var channelRef = ref.child('channels').child($stateParams.channelId);
+	var sendPID;
 
 	// $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
  //    	viewData.enableBack = true;
@@ -96,6 +97,22 @@ angular.module('chat.controllers', [])
 
 	$scope.$on('$ionicView.enter', function() {
 		user = firebase.auth().currentUser;
+
+		$log.log(channelRef.child('users').child(user.uid).child('player_id'))
+
+		channelRef.child('users').once('value', function(snapshot) {
+		         $log.log(snapshot.val());
+
+			snapshot.forEach(function(childSnapshot) {
+		         // $log.log(childSnapshot.child('userId').val());
+
+				if (childSnapshot.child('userId').val() != user.uid) {			
+					sendPID = '"' + childSnapshot.child('player_id').val() + '"';
+				}
+			});
+			         // $log.log(sendPID);
+
+		});
 
 		$scope.messages = $firebaseArray(channelRef.child('chats'));
 
@@ -115,18 +132,21 @@ angular.module('chat.controllers', [])
     	$scope.sendMsg = function() {
              $scope.messages.$add({message: $scope.msg, date: Date(), name: user.email, userId: user.uid});
 
-		// var notificationObj = { contents: {en: $scope.msg}, include_player_ids: ["8aa3abb9-c13d-4505-a3dd-acf9aa3a7fbb"]};
-	 //  	window.plugins.OneSignal.postNotification(notificationObj,
-		//     function(successResponse) {
-		//       console.log("Notification Post Success:", successResponse);
-		//     },
-		//     function (failedResponse) {
-		//       console.log("Notification Post Failed: ", failedResponse);
-		//       alert("Notification Post Failed:\n" + JSON.stringify(failedResponse));
-		//     }
-		// );
-
              $scope.msg = "";
+
+         $log.log(sendPID);
+
+		var notificationObj = { contents: {en: $scope.msg}, include_player_ids: [sendPID]};
+	  	window.plugins.OneSignal.postNotification(notificationObj,
+		    function(successResponse) {
+		      console.log("Notification Post Success:", successResponse);
+		    },
+		    function (failedResponse) {
+		      console.log("Notification Post Failed: ", failedResponse);
+		      alert("Notification Post Failed:\n" + JSON.stringify(failedResponse));
+		    }
+		);
+
         }
     }
     $scope.clear = function(){
@@ -183,21 +203,37 @@ angular.module('chat.controllers', [])
 	$scope.openOneChannel = function(user2id) {
 		user = firebase.auth().currentUser;
 
+		var userPID;
+		var user2PID;
 		var user2email;
+
+		usersRef.child(user.uid).child('player_id').on('value', function(snapshot) {
+			userPID = snapshot.val();
+		});
+
+		usersRef.child(user2id).child('player_id').on('value', function(snapshot) {
+			user2PID = snapshot.val();
+		});
+
 		usersRef.child(user2id).child('email').on('value', function(snapshot) {
 			user2email = snapshot.val();
 		});
 
 		var channelId = (user.uid<user2id ? user.uid+'_'+user2id : user2id+'_'+user.uid);
 
-		channelsRef.child(channelId).child('users').child(user.uid).set(user.email);
+		channelsRef.child(channelId).child('users').child(user.uid).child('userId').set(user.uid);
+		channelsRef.child(channelId).child('users').child(user.uid).child('player_id').set(userPID);
 		channelsRef.child(channelId).child('channelId').set(channelId);
 
 		usersRef.child(user.uid).child('channels').child(channelId).child('name').set(user2email);
 		usersRef.child(user.uid).child('channels').child(channelId).child('channelId').set(channelId);
 
 
-		channelsRef.child(channelId).child('users').child(user2id).set(user2email);
+		channelsRef.child(channelId).child('users').child(user2id).child('userId').set(user2id);
+		channelsRef.child(channelId).child('users').child(user2id).child('player_id').set(user2PID);
+		usersRef.child(user2id).child('channels').child(channelId).child('name').set(user2email);
+		usersRef.child(user2id).child('channels').child(channelId).child('channelId').set(channelId);
+
 		usersRef.child(user2id).child('channels').child(channelId).child('name').set(user.email);
 		usersRef.child(user2id).child('channels').child(channelId).child('channelId').set(channelId);
 
@@ -220,7 +256,7 @@ angular.module('chat.controllers', [])
 	var allChannels = [];
 
 
-	$scope.$on('$ionicView.enter', function() {
+	$scope.$on('$ionicView.beforeEnter', function() {
 		user = firebase.auth().currentUser;
 
 		userChannelsRef = ref.child('users').child(user.uid).child('channels');
@@ -228,6 +264,15 @@ angular.module('chat.controllers', [])
 		
 
 	})
+
+	// $scope.$on('$ionicView.enter', function() {
+	// 	user = firebase.auth().currentUser;
+
+	// 	userChannelsRef = ref.child('users').child(user.uid).child('channels');
+	// 	$scope.channels = $firebaseArray(userChannelsRef);
+		
+
+	// })
 
 	$scope.openChannel = function(channelId) {
 		user = firebase.auth().currentUser;

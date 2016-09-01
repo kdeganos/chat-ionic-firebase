@@ -16,22 +16,15 @@ angular.module('chat.services', ['firebase'])
 		},
 
 		createProfile: function(uid, user) {
-			var profile = {
-				// id: uid,
-				// email: user.email,
-				// registration_date: Date()
-			};
-			
+						
 			window.plugins.OneSignal.getIds(function(ids) {
-				console.log('getIds: ' + JSON.stringify(ids));
 
-			 	profile = {
+			 	var profile = {
 					id: uid,
 					email: user.email,
 					registration_date: Date(),
 					player_id: ids.userId
 				};
-			  alert("userId = " + ids.userId + ", pushToken = " + ids.pushToken);
 			ref.child("users").child(uid).set(profile);
 			});
 

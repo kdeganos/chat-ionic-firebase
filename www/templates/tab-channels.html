@@ -1,7 +1,7 @@
 <ion-view view-title="Channels">
   <ion-content>
     <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="channel in channels" type="item-text-wrap" ng-click="openChannel(channel.channelId)">
+      <ion-item class="item-avatar item-icon-right" ng-repeat="channel in channels" type="item-text-wrap" ng-click="openChannel(channel.channelId)">
 <!--        ui-sref="channel({channelId: channelId})">
  -->       <!-- <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="user in users" type="item-text-wrap" href="#/tab/user/{{user.id}}"> -->
         <h2>{{channel.name}}</h2>
