@@ -98,21 +98,21 @@ angular.module('chat.controllers', [])
 	$scope.$on('$ionicView.enter', function() {
 		user = firebase.auth().currentUser;
 
-		$log.log(channelRef.child('users').child(user.uid).child('player_id'))
+		// $log.log(channelRef.child('users').child(user.uid).child('player_id'))
 
-		channelRef.child('users').once('value', function(snapshot) {
-		         $log.log(snapshot.val());
+		// channelRef.child('users').once('value', function(snapshot) {
+		//          $log.log(snapshot.val());
 
-			snapshot.forEach(function(childSnapshot) {
-		         // $log.log(childSnapshot.child('userId').val());
+		// 	snapshot.forEach(function(childSnapshot) {
+		//          // $log.log(childSnapshot.child('userId').val());
 
-				if (childSnapshot.child('userId').val() != user.uid) {			
-					sendPID = '"' + childSnapshot.child('player_id').val() + '"';
-				}
-			});
-			         // $log.log(sendPID);
+		// 		if (childSnapshot.child('userId').val() != user.uid) {			
+		// 			sendPID = '"' + childSnapshot.child('player_id').val() + '"';
+		// 		}
+		// 	});
+		// 	         $log.log(sendPID);
 
-		});
+		// });
 
 		$scope.messages = $firebaseArray(channelRef.child('chats'));
 
@@ -130,11 +130,27 @@ angular.module('chat.controllers', [])
 		user = firebase.auth().currentUser;
 
     	$scope.sendMsg = function() {
+
+    		channelRef.child('users').once('value', function(snapshot) {
+		         $log.log(snapshot.val());
+
+			snapshot.forEach(function(childSnapshot) {
+		         // $log.log(childSnapshot.child('userId').val());
+
+				if (childSnapshot.child('userId').val() != user.uid) {			
+					sendPID = childSnapshot.child('player_id').val();
+				}
+			});
+			         $log.log(sendPID);
+
+		});
              $scope.messages.$add({message: $scope.msg, date: Date(), name: user.email, userId: user.uid});
 
-             $scope.msg = "";
 
          $log.log(sendPID);
+
+         			         $log.log("Success " + sendPID);
+
 
 		var notificationObj = { contents: {en: $scope.msg}, include_player_ids: [sendPID]};
 	  	window.plugins.OneSignal.postNotification(notificationObj,
@@ -146,6 +162,8 @@ angular.module('chat.controllers', [])
 		      alert("Notification Post Failed:\n" + JSON.stringify(failedResponse));
 		    }
 		);
+
+         $scope.msg = "";
 
         }
     }
