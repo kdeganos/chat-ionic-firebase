@@ -275,11 +275,19 @@ angular.module('chat.controllers', [])
 
 
 	$scope.$on('$ionicView.beforeEnter', function() {
-		user = firebase.auth().currentUser;
+		// var authData = ref.getAuth();
+			user = firebase.auth().currentUser;
 
-		userChannelsRef = ref.child('users').child(user.uid).child('channels');
-		$scope.channels = $firebaseArray(userChannelsRef);
+		if (user != null) {
+
+			userChannelsRef = ref.child('users').child(user.uid).child('channels');
+			$scope.channels = $firebaseArray(userChannelsRef);
+		} else {
+			$state.go('login')
+		}
 		
+		// userChannelsRef = ref.child('users').child(user.uid).child('channels');
+		// 	$scope.channels = $firebaseArray(userChannelsRef);
 
 	})
 
