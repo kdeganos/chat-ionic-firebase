@@ -12,6 +12,7 @@ angular.module('chat.services', ['firebase'])
 		user: {},
 
 		login: function(user) {
+
 			return auth.$signInWithEmailAndPassword(user.email, user.password);
 		},
 
@@ -62,7 +63,8 @@ angular.module('chat.services', ['firebase'])
 			// });
 		},
 
-		logout: function() {
+		logout: function(user) {
+			ref.child("users").child(user.uid).child("player_id").remove();
 			auth.$signOut();
 			console.log("User logged out");
 		},
