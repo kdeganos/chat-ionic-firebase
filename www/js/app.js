@@ -5,15 +5,35 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('chat', ['ionic', 'chat.controllers', 'chat.services', 'ngStorage', 'ngCordova', 'firebase', 'ngMessages', 'ngScrollGlue'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $state) {
   $ionicPlatform.ready(function(FURL) {
 
     // Enable to debug issues.
     // window.plugins.OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
     
     var notificationOpenedCallback = function(jsonData) {
-      console.log('didReceiveRemoteNotificationCallBack: ' + JSON.stringify(jsonData));
+      // console.log('didReceiveRemoteNotificationCallBack: ' + JSON.stringify(jsonData));
+        // var state = $injector.get($state);
+        // alert(jsonData.additionalData.chanId);
+        // state.go('tab.users');
+
+
+        if(!jsonData.isActive) {
+          $state.go('channel', {channelId: jsonData.additionalData.chanId});
+        }
+        // $location.path('/channel/'+jsonData.additionalData.chanId);
+        // alert("hello");
+        // alert("hello"+JSON.stringify(jsonData));
+
+      // if (jsonData.additionalData && jsonData.additionalData.chanId) {
+      //   var state = $injector.get($state);
+      //   alert(jsonData.additionalData.chanId);
+      //   state.go('tab.users');
+      //   // state.go('channel', {channelId: jsonData.additionalData.chanId});
+      // }
+
     };
+
     window.plugins.OneSignal.init("f4b1938f-dc11-4784-bb88-737ef29292ab",
                                    {googleProjectNumber: "672728738668"},
                                    notificationOpenedCallback);

@@ -150,7 +150,12 @@ angular.module('chat.controllers', [])
 						sendPID = pidSnap.val();
 						$log.log("sendPID" + sendPID);
 
-						var notificationObj = { contents: {en: message}, include_player_ids: [sendPID]};
+						var notificationObj = { app_id: "f4b1938f-dc11-4784-bb88-737ef29292ab", 
+						contents: {en: message},
+						include_player_ids: [sendPID],
+						data: {chanId: "ZnAiqJYJRDb8wySLlLCIp9F3lor2_aCBftfT5zWgaC7uYuohUJ7mwFoV2"}
+						};
+
 					  	window.plugins.OneSignal.postNotification(notificationObj,
 						    function(successResponse) {
 						      console.log("Notification Post Success:", successResponse);
