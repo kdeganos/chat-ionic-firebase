@@ -65,6 +65,7 @@ angular.module('chat.controllers', [])
 
 })
 
+
 .controller('RegistrationCtrl', function ($scope, $state, $cordovaOauth, $localStorage, $location, $http, $ionicPopup, $firebaseObject, Auth, FURL, Utils) {
 
 	$scope.register = function(user) {
@@ -84,10 +85,6 @@ angular.module('chat.controllers', [])
 	};
 })
 
-.controller('OneToOneCtrl', function($scope, $state, $firebase, $firebaseArray, $firebaseAuth, $location, Auth, FURL) {
-
-
-})
 
 .controller('ChatsCtrl', function($scope, $state, $stateParams, $firebase, $firebaseArray, $firebaseAuth, $location, $log, Auth, FURL) {
 	var ref = firebase.database().ref();
@@ -153,7 +150,7 @@ angular.module('chat.controllers', [])
 						var notificationObj = { app_id: "f4b1938f-dc11-4784-bb88-737ef29292ab", 
 						contents: {en: message},
 						include_player_ids: [sendPID],
-						data: {chanId: "ZnAiqJYJRDb8wySLlLCIp9F3lor2_aCBftfT5zWgaC7uYuohUJ7mwFoV2"}
+						data: {chanId: $stateParams.channelId}
 						};
 
 					  	window.plugins.OneSignal.postNotification(notificationObj,
@@ -175,11 +172,9 @@ angular.module('chat.controllers', [])
 			});
 
 		});
-             $scope.messages.$add({message: $scope.msg, date: Date(), name: user.email, userId: user.uid});
-
-
+        $scope.messages.$add({message: $scope.msg, date: Date(), name: user.email, userId: user.uid});
 		
-         $scope.msg = "";
+        $scope.msg = "";
 
         }
     }
@@ -208,14 +203,6 @@ angular.module('chat.controllers', [])
  //        $scope.clear = function(){
  //          $scope.name = "";
  //        }
-    
-    $scope.logOut = function () {
-    	user = firebase.auth().currentUser;
-		Auth.logout(user, ref);
-		$state.go("login");
-	}
-        
-
 
 })
 
@@ -287,6 +274,12 @@ angular.module('chat.controllers', [])
 })
 
 .controller('AccountCtrl', function($scope, $state, $firebase) {
+
+	$scope.logOut = function () {
+    	user = firebase.auth().currentUser;
+		Auth.logout(user, ref);
+		$state.go("login");
+	}
 })
 
 .controller('ChannelsListCtrl', function($scope, $state, $firebase, $firebaseArray, $log, Auth, FURL) {

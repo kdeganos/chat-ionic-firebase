@@ -50,3 +50,25 @@ label.item.valid-lr {
         border: 2px solid grey;
 /*        padding-bottom: 30px;
 */      }
+
+.send-box {
+  display: block;
+  margin-top: 5px;
+  margin-left: 1px;
+}
+
+.message-line {
+  display: block;
+  overflow: hidden;
+  padding-right: 10px;
+}
+
+.message-box {
+  width: 100%;
+  background: #eaeff4;
+}
+
+.ion-android-send {
+  font-size: 32px;
+  float: right;
+}
