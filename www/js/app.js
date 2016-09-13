@@ -5,8 +5,18 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('chat', ['ionic', 'chat.controllers', 'chat.services', 'ngStorage', 'ngCordova', 'firebase', 'ngMessages', 'ngScrollGlue'])
 
-.run(function($ionicPlatform, $state) {
+.run(function($ionicPlatform, $state, Utils) {
+  // $ionicPlatform.on('pause', Utils.goOffline());
+
   $ionicPlatform.ready(function(FURL) {
+     // $ionicPlatform.on('pause', Utils.goOffline());
+
+    // document.addEventListener("deviceready", onDeviceReady, false);
+    // document.addEventListener("resume", onReseume, false);
+
+    // function onResume() {
+
+    // }
 
     // Enable to debug issues.
     // window.plugins.OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
@@ -58,7 +68,15 @@ angular.module('chat', ['ionic', 'chat.controllers', 'chat.services', 'ngStorage
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
+
+    document.addEventListener("pause", Utils.goOffline(), false);
+
   });
+
+  // function onDeviceReady() {
+  //       document.addEventListener("pause", Utils.goOffline(), false);
+
+  // }  
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
@@ -126,7 +144,8 @@ angular.module('chat', ['ionic', 'chat.controllers', 'chat.services', 'ngStorage
       url: '/channel/:channelId',
       params: {channelId: {dynamic: true}},
       templateUrl: 'templates/channel.html',
-      controller: 'ChatsCtrl'
+      controller: 'ChatsCtrl',
+      controllerAs: 'ChatsCrl'
     })
     .state('login', {
       url: '/login',

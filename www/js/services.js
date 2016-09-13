@@ -86,7 +86,7 @@ angular.module('chat.services', ['firebase'])
 	return Auth;
 })
 
-.factory('Utils', function($ionicLoading, $ionicPopup) {
+.factory('Utils', function($ionicLoading, $ionicPopup, $firebase) {
 	var Utils = {
 		show: function() {
 			$ionicLoading.show({
@@ -125,10 +125,21 @@ angular.module('chat.services', ['firebase'])
 			// 	}
 			// }
 			Utils.showAlert("Error: ", e.message);
+		},
+
+		goOffline: function() {
+			alert('bye');
+			var user = firebase.auth().currentUser;
+
+			if (user != null) {
+				var userRef = firebase.database().ref().child('users').child(user.uid);
+				userRef.child('onlineStatus').set("false");
+			}
 		}
 	};
 	return Utils;
 })
+
 
 // .factory('Chats', function($firebase, Channels) {
 // 	var selectedRoomId;

@@ -1,4 +1,4 @@
-<ion-view view-title="Channels">
+<ion-view view-title="Channels" ng-controller="ChannelsListCtrl">
   <ion-content>
     <ion-list>
       <ion-item class="item-avatar item-icon-right" ng-repeat="channel in channels" type="item-text-wrap" ng-click="openChannel(channel.channelId)">

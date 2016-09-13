@@ -69,6 +69,7 @@ label.item.valid-lr {
 }
 
 .ion-android-send {
-  font-size: 32px;
+  font-size: 33px;
   float: right;
+  padding-right: 10px;
 }
