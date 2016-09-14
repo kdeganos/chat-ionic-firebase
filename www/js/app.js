@@ -9,7 +9,19 @@ angular.module('chat', ['ionic', 'chat.controllers', 'chat.services', 'ngStorage
   // $ionicPlatform.on('pause', Utils.goOffline());
 
   $ionicPlatform.ready(function(FURL) {
-     // $ionicPlatform.on('pause', Utils.goOffline());
+    $ionicPlatform.on('pause', function() {
+      // $rootScope.$broadcast(Utils.goOffline());
+      var user = firebase.auth().currentUser;
+
+      if (user != null) {
+        var userRef = firebase.database().ref().child('users').child(user.uid);
+        userRef.child('onlineStatus').set("inactive");
+      }
+     });
+
+    $ionicPlatform.on('resume', function() {
+      $state.reload();
+     });
 
     // document.addEventListener("deviceready", onDeviceReady, false);
     // document.addEventListener("resume", onReseume, false);
@@ -53,7 +65,8 @@ angular.module('chat', ['ionic', 'chat.controllers', 'chat.services', 'ngStorage
     //   alert("userId = " + ids.userId + ", pushToken = " + ids.pushToken);
     // });
     // Show an alert box if a notification comes in when the user is in your app.
-    window.plugins.OneSignal.enableInAppAlertNotification(false);
+    window.plugins.OneSignal.enableNotificationsWhenActive(true);
+    // window.plugins.OneSignal.enableInAppAlertNotification(false);
 
     if(window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -69,7 +82,7 @@ angular.module('chat', ['ionic', 'chat.controllers', 'chat.services', 'ngStorage
       StatusBar.styleDefault();
     }
 
-    document.addEventListener("pause", Utils.goOffline(), false);
+    // document.addEventListener("pause", Utils.goOffline(), false);
 
   });
 

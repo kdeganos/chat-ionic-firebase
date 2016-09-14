@@ -20,7 +20,7 @@
 
 
     <div class="send-box">
-     <i class="icon ion-android-send" ng-click="sendMsg()"></i>
+     <i class="icon ion-android-send" ng-click="sendMsg()" ng-click="msg=null"></i>
      <span class= "message-line"><input class="message-box" type="text" ng-model="msg" ng-keydown="addMessage($event)" placeholder="Message..."></span>
    </div>
  </div>

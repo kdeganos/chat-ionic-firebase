@@ -75,12 +75,19 @@ angular.module('chat.controllers', [])
 })
 
 
-.controller('ChatsCtrl', function($scope, $state, $stateParams, $firebase, $firebaseArray, $firebaseAuth, $location, $log, Auth, FURL) {
+.controller('ChatsCtrl', function($ionicPlatform, $scope, $state, $stateParams, $firebase, $firebaseArray, $firebaseAuth, $location, $log, Auth, FURL, Utils) {
 	var ref = firebase.database().ref();
 	var user = firebase.auth().currentUser;
 	var channelRef = ref.child('channels').child($stateParams.channelId);
 	var sendPID;
 	var message = $scope.msg;
+
+	// var destroy = $ionicPlatform.on('pause', Utils.goOffline());
+
+	// $scope.$on('$destroy', function(event) {
+	// 	destroy();
+	// });
+
 
 	// $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
  //    	viewData.enableBack = true;
@@ -100,6 +107,12 @@ angular.module('chat.controllers', [])
 		channelRef.on('child_changed', setMessages);
 	});
 
+	// $scope.$on('$ionicView.afterEnter', function() {
+	// 	$ionicPlatform.on('pause', Utils.goOffline());
+	// 	document.addEventListener("pause", Utils.goOffline(), false);
+
+	// });
+
 	// $scope.$on('$ionicView.leave', function() {
 	// 	user = firebase.auth().currentUser;
 	// 	alert("hello");
@@ -116,48 +129,68 @@ angular.module('chat.controllers', [])
 		user = firebase.auth().currentUser;
 
     	$scope.sendMsg = function() {
-    		message = $scope.msg;
+    		message =$scope.msg;
     		if (message.trim() != "") {
-    		$scope.messages.$add({message: $scope.msg, date: Date(), name: user.email, userId: user.uid});
-    		channelRef.child('users').once('value', function(snapshot) {
+	    		$scope.messages.$add({message: $scope.msg, date: Date(), name: user.email, userId: user.uid});
+	    		channelRef.child('users').once('value', function(snapshot) {
 
-			snapshot.forEach(function(childSnapshot) {
-
-				if (childSnapshot.child('userId').val() != user.uid) {			
-					var userRef = ref.child("users").child(childSnapshot.child("userId").val());
-					userRef.child("player_id").once("value", function(pidSnap) {
-						if( pidSnap.val() != null) {
-						sendPID = pidSnap.val();
-						$log.log("sendPID" + sendPID);
-
-						var notificationObj = { app_id: "f4b1938f-dc11-4784-bb88-737ef29292ab", 
-						contents: {en: message},
-						include_player_ids: [sendPID],
-						data: {chanId: $stateParams.channelId}
-						};
-
-					  	window.plugins.OneSignal.postNotification(notificationObj,
-						    function(successResponse) {
-						      console.log("Notification Post Success:", successResponse);
-						    },
-						    function (failedResponse) {
-						      console.log("Notification Post Failed: ", failedResponse);
-						      alert("Notification Post Failed:\n" + JSON.stringify(failedResponse));
-						    }
-						);
+					snapshot.forEach(function(childSnapshot) {
+						var recipientId = childSnapshot.child('userId').val();
+						var userRef = ref.child("users").child(recipientId);
 
 
-					}
+						// var userId = user.uid;
+						// var tempchanId = $stateParams.channelId;
+
+						userRef.child("onlineStatus").once("value", function(statusSnap) {
+							// alert("RID: " + recipientId + "UID: " + user.uid + "STATUS: " + statusSnap.val() + "CHANID: " + $stateParams.channelId);
+							if (recipientId != user.uid && statusSnap.val() != $stateParams.channelId) {
+								// var userRef = ref.child("users").child(recipientId);
+								userRef.child("player_id").once("value", function(pidSnap) {
+
+									if( pidSnap.val() != null) {
+									sendPID = pidSnap.val();
+
+									var notificationObj = {
+									// app_id: "f4b1938f-dc11-4784-bb88-737ef29292ab", 
+									contents: {en: message},
+									include_player_ids: [sendPID],
+									data: {chanId: $stateParams.channelId},
+									android_group: $stateParams.channelId
+									};
+
+								  	window.plugins.OneSignal.postNotification(notificationObj,
+									    function(successResponse) {
+									  	$scope.msg = "";
+									      console.log("Notification Post Success:", successResponse);
+									    },
+									    function (failedResponse) {
+									    $scope.msg = "";
+									      console.log("Notification Post Failed: ", failedResponse);
+									      alert("Notification Post Failed:\n" + JSON.stringify(failedResponse));
+									    }
+									    );
+
+									} else {
+										$scope.msg = "";
+									}
+								});
+								
+								
+							} else {
+								$scope.msg = "";
+							}
+
+
+						});
+
+
 					});
-					
-					
-				}
-			});
 
-		});
-    	}
+				});
+        	
+    		}
         		
-        $scope.msg = "";
 
         }
     }
