@@ -127,14 +127,9 @@ angular.module('chat.services', ['firebase'])
 			Utils.showAlert("Error: ", e.message);
 		},
 
-		goOffline: function() {
-			alert('bye');
-			var user = firebase.auth().currentUser;
-
-			if (user != null) {
-				var userRef = firebase.database().ref().child('users').child(user.uid);
-				userRef.child('onlineStatus').set("false");
-			}
+		dateCompare: function(send, last) {
+			var sendDate = Date.parse(send);
+			var lastDate = Date.parse(last);
 		}
 	};
 	return Utils;

@@ -73,3 +73,7 @@ label.item.valid-lr {
   float: right;
   padding-right: 10px;
 }
+
+.counter {
+  color: green;
+}

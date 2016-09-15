@@ -5,19 +5,27 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('chat', ['ionic', 'chat.controllers', 'chat.services', 'ngStorage', 'ngCordova', 'firebase', 'ngMessages', 'ngScrollGlue'])
 
-.run(function($ionicPlatform, $state, Utils) {
-  // $ionicPlatform.on('pause', Utils.goOffline());
+.run(function($ionicPlatform, $ionicHistory, $state, $rootScope, $stateParams, Utils) {
 
   $ionicPlatform.ready(function(FURL) {
     $ionicPlatform.on('pause', function() {
-      // $rootScope.$broadcast(Utils.goOffline());
       var user = firebase.auth().currentUser;
 
       if (user != null) {
         var userRef = firebase.database().ref().child('users').child(user.uid);
-        userRef.child('onlineStatus').set("inactive");
+          userRef.child('onlineStatus').set("inactive");
+
+
+
+        if($stateParams.channelId != null) {
+
+        var channelRef = firebase.database().ref().child('channels').child($stateParams.channelId).child('users').child(user.uid).child('lastViewed');
+        channelRef.set(Date());
+        }
+
+
       }
-     });
+    });
 
     $ionicPlatform.on('resume', function() {
       $state.reload();
