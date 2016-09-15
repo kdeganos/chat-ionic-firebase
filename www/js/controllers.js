@@ -82,16 +82,6 @@ angular.module('chat.controllers', [])
 	var sendPID;
 	var message = $scope.msg;
 
-	// var destroy = $ionicPlatform.on('pause', Utils.goOffline());
-
-	// $scope.$on('$destroy', function(event) {
-	// 	destroy();
-	// });
-
-
-	// $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
- //    	viewData.enableBack = true;
-	// });
 
 	$scope.$on('$ionicView.enter', function() {
 		user = firebase.auth().currentUser;
@@ -115,8 +105,6 @@ angular.module('chat.controllers', [])
 
 
 	$scope.$on('$ionicView.beforeLeave', function() {
-		// user = firebase.auth().currentUser;
-		// alert("hello");
 		var timestamp = Date();
 
 		//Puts users's lastViewed timestamp in channel
@@ -144,15 +132,11 @@ angular.module('chat.controllers', [])
 						var userRef = ref.child("users").child(recipientId);
 
 
-						// var userId = user.uid;
-						// var tempchanId = $stateParams.channelId;
-
 						userRef.child("onlineStatus").once("value", function(statusSnap) {
 							// alert("RID: " + recipientId + "UID: " + user.uid + "STATUS: " + statusSnap.val() + "CHANID: " + $stateParams.channelId);
 
 
 							if (recipientId != user.uid && statusSnap.val() != $stateParams.channelId) {
-								// var userRef = ref.child("users").child(recipientId);
 
 								userRef.child('channels').child($stateParams.channelId).child('unread').transaction(function(unread) {
 									if (unread == null) {
@@ -197,20 +181,13 @@ angular.module('chat.controllers', [])
 							} else {
 								$scope.msg = "";
 							}
-
-
 						});
-
-
 					});
-
-				});
-        	
+				});     	
     		}
-        		
-
         }
     }
+
     $scope.clear = function(){
       $scope.name = "";
     }
@@ -277,8 +254,6 @@ angular.module('chat.controllers', [])
 		//Puts channel ID in user2's node
 		usersRef.child(user2id).child('channels').child(channelId).child('channelId').set(channelId);
 
-
-
       	$state.go('channel', {channelId: channelId})
 	}
 })
@@ -304,6 +279,7 @@ angular.module('chat.controllers', [])
 		user = firebase.auth().currentUser;
 
 		if (user != null) {
+			var userRef = firebase.database().ref().child('users').child(user.uid);
 
 			userChannelsRef = ref.child('users').child(user.uid).child('channels');
 
@@ -312,7 +288,6 @@ angular.module('chat.controllers', [])
 			userChannelsRef.on('child_added', setChannels);
 			userChannelsRef.on('child_changed', setChannels);
 
-			var userRef = firebase.database().ref().child('users').child(user.uid);
 			userRef.child('onlineStatus').set("active");
 		} else {
 			$state.go('login')
@@ -328,7 +303,6 @@ angular.module('chat.controllers', [])
 
 	$scope.openChannel = function(channelId) {
 		user = firebase.auth().currentUser;
-
 
       	$state.go('channel', {channelId: channelId})
 	}
