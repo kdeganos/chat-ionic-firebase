@@ -13,16 +13,12 @@ angular.module('chat', ['ionic', 'chat.controllers', 'chat.services', 'ngStorage
 
       if (user != null) {
         var userRef = firebase.database().ref().child('users').child(user.uid);
-          userRef.child('onlineStatus').set("inactive");
-
+        userRef.child('onlineStatus').set("inactive");
 
         if($stateParams.channelId != null) {
-
-        var channelRef = firebase.database().ref().child('channels').child($stateParams.channelId).child('users').child(user.uid).child('lastViewed');
-        channelRef.set(Date());
+          var channelRef = firebase.database().ref().child('channels').child($stateParams.channelId).child('users').child(user.uid).child('lastViewed');
+          channelRef.set(Date());
         }
-
-
       }
     });
 
